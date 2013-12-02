@@ -33,7 +33,7 @@ public class ChatWindow extends JFrame{
 	private TCPClient myTCPClient;
 	private TCPServer myTCPServer;
 	
-	public ChatWindow(String ownName, String peersName, String destIP, int destPort, int serverPort){
+	public ChatWindow(String ownName, String peersName, String destIP, int destPort, TCPServer server){
 		super();
 		this.setTitle(ownName + " is Chatting with " + peersName);
         this.setLayout(new FlowLayout());
@@ -42,11 +42,14 @@ public class ChatWindow extends JFrame{
         this.mainPanel.setLayout(new GridBagLayout());
         this.getContentPane().add(this.mainPanel);
         
+        myTCPServer = server;
         myName = ownName;
         peerName = peersName;
         
 		chatBox = new DisplayTextScrollPanel("chat history", "", 10, 15, false);
 		
+        myTCPServer.addChatWindow(peerName, chatBox);
+        
         addScrollPane();
         addTextInputField();
         addSendButton();
@@ -61,8 +64,6 @@ public class ChatWindow extends JFrame{
           });
         
         myTCPClient = new TCPClient(destIP, destPort, 200);
-    	myTCPServer = new TCPServer(serverPort, chatBox, peerName);
-    	new Thread(myTCPServer).start();
 	}
 	
 	private void addScrollPane(){
@@ -100,7 +101,7 @@ public class ChatWindow extends JFrame{
     private class sendListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			myTCPClient.sendObjectToServer("java.lang.String", input.getText());
+			myTCPClient.sendObjectToServer("java.lang.String", myName + ":" + input.getText());
 			chatBox.addText(myName + ":" + input.getText());
 			input.setText("");
 		}

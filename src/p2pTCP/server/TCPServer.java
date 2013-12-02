@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
+import java.util.Map;
 
 public class TCPServer implements Runnable {
 
@@ -21,13 +22,11 @@ public class TCPServer implements Runnable {
                                                         "ReceivedFile.txt";
     private Object receivedObj = null;
     private String receivedFile = null;
-    private DisplayTextScrollPanel myOutput;
+    private Map<String, DisplayTextScrollPanel> nameToChatBox;
     private String peerName;
     private boolean over;
 
-    public TCPServer(int portNum, DisplayTextScrollPanel out, String peersName){
-    	peerName = peersName;
-    	myOutput = out;
+    public TCPServer(int portNum){
     	PORT = portNum;
     	over = false;
     }
@@ -59,6 +58,10 @@ public class TCPServer implements Runnable {
             System.out.println(e.getMessage());
         }
     }
+    
+    public synchronized void addChatWindow(String peerName, DisplayTextScrollPanel out){
+    	nameToChatBox.put(peerName, out);
+    }
 
     @SuppressWarnings("rawtypes")
     private void dealWithObjectReceived (String inType, Object inObj) {
@@ -78,7 +81,8 @@ public class TCPServer implements Runnable {
             System.out.println("I received object \"" + c.cast(inObj) + "\" from the client!");
 
             if (inType.equals("java.lang.String")){
-            	myOutput.addText(peerName + ":" + (String) receivedObj);
+            	String received = (String) receivedObj;
+            	nameToChatBox.get(received.split(":")[0]).addText(received);
             }
         }
     }

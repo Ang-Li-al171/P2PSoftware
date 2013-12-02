@@ -52,7 +52,8 @@ public class PPServer {
 
     public PPServer () throws IOException {
 
-        DatagramSocket serverSocket = new DatagramSocket(3333);
+        @SuppressWarnings("resource")
+		DatagramSocket serverSocket = new DatagramSocket(3333);
 
         while (true) {
         	
@@ -74,7 +75,9 @@ public class PPServer {
                             port);
                     String name = strs[1];
                     
-                    myPPClientList.put(name.trim(),key);
+                    if (!myPPClientList.containsKey(name.trim())){
+                    	myPPClientList.put(name.trim(),key.trim());
+                    }
                     String list = packListIntoString();
                     sendData = list.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData,

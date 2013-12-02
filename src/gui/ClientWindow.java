@@ -8,13 +8,14 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import p2pTCP.server.TCPServer;
 
 import udp.PPClient;
 
@@ -25,9 +26,11 @@ public class ClientWindow extends JFrame{
 	private JButton connectButton;
 	private JButton peerConnectButton;
 	private JComboBox<Object> peerChoice;
-	private PPClient myUDPClient;
 	private HashMap<String, String> listOfPeers;
 	private String myName;
+	
+	private TCPServer myTCPServer;
+	private PPClient myUDPClient;
 	
 	/**
 	 * 
@@ -104,14 +107,20 @@ public class ClientWindow extends JFrame{
 		mainPanel.validate();
 		mainPanel.repaint();
 	}
-	
+
 	private class newChat implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String peerName = peerChoice.getSelectedItem().toString();
 			String[] ipAndPort = listOfPeers.get(peerName).split("-");
-			new ChatWindow(myName, peerName, ipAndPort[0], Integer.parseInt(ipAndPort[1]),
-					Integer.parseInt(listOfPeers.get(myName).split("-")[1]));
+			
+			//init TCP server if necessary
+			if (myTCPServer == null){
+				myTCPServer = new TCPServer(Integer.parseInt(listOfPeers.get(myName).split("-")[1]));
+	    		new Thread(myTCPServer).start();
+			}
+			
+			new ChatWindow(myName, peerName, ipAndPort[0], Integer.parseInt(ipAndPort[1]), myTCPServer);
 		}
 	}
 	
