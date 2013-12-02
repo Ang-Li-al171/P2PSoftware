@@ -37,27 +37,28 @@ public class PPServer {
     }
 
     private String packListIntoString () {
-        String list = "";
+        StringBuilder list = new StringBuilder();
         int index = 0;
-        for (String addr : myPPClientList.keySet()) {
-            list += addr + ":" + myPPClientList.get(addr);
+        for (String name : myPPClientList.keySet()) {
+            list.append(myPPClientList.get(name) + ":" + name);
             if (index != myPPClientList.size()-1){
-                list += ';';
+                list.append(';');
             }
             index ++;
         }
-        System.out.println(myPPClientList.size());
-        System.out.println(myPPClientList);
         
-        return list;
+        return list.toString();
     }
 
     public PPServer () throws IOException {
 
         DatagramSocket serverSocket = new DatagramSocket(3333);
-        byte[] receiveData = new byte[4096];
-        byte[] sendData = new byte[32768];
+
         while (true) {
+        	
+            byte[] receiveData = new byte[4096];
+            byte[] sendData = new byte[32768];
+            
             DatagramPacket receivePacket = new DatagramPacket(receiveData,
                     receiveData.length);
             serverSocket.receive(receivePacket);
@@ -65,7 +66,6 @@ public class PPServer {
             String[] strs = sentence.split(":");
             if (strs.length == 2) {
                 if (strs[0].equals("Connection Request")) {
-                    System.out.println("RECEIVED: " + sentence);
 
                     InetAddress IPAddress = receivePacket.getAddress();
                     int port = receivePacket.getPort();
@@ -73,18 +73,8 @@ public class PPServer {
                     String key = convertAddressToString(IPAddress.getAddress(),
                             port);
                     String name = strs[1];
-                    System.out.println(myPPClientList.containsKey(key));
-                    if (myPPClientList.containsKey(key)){
-                        myPPClientList.remove(key);
-                    }
-                    if (myPPClientList.containsValue(name)){
-                        for(String k: myPPClientList.keySet()){
-                            if (myPPClientList.get(k).equals(name)){
-                                myPPClientList.remove(k);
-                            }
-                        }
-                    }
-                    myPPClientList.put(key,name);
+                    
+                    myPPClientList.put(name.trim(),key);
                     String list = packListIntoString();
                     sendData = list.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData,

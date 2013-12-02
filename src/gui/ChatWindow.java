@@ -100,8 +100,8 @@ public class ChatWindow extends JFrame{
     private class sendListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			myTCPClient.sendObjectToServer("java.lang.String", myName + ":" + input.getText());
-			chatBox.addText(input.getText());
+			myTCPClient.sendObjectToServer("java.lang.String", input.getText());
+			chatBox.addText(myName + ":" + input.getText());
 			input.setText("");
 		}
     }

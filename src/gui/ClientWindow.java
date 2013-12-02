@@ -110,7 +110,7 @@ public class ClientWindow extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			String peerName = peerChoice.getSelectedItem().toString();
 			String[] ipAndPort = listOfPeers.get(peerName).split("-");
-			new ChatWindow(peerName, ipAndPort[0], Integer.parseInt(ipAndPort[1]),
+			new ChatWindow(myName, peerName, ipAndPort[0], Integer.parseInt(ipAndPort[1]),
 					Integer.parseInt(listOfPeers.get(myName).split("-")[1]));
 		}
 	}
