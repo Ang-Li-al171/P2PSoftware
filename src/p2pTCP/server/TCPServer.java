@@ -22,9 +22,11 @@ public class TCPServer implements Runnable {
     private Object receivedObj = null;
     private String receivedFile = null;
     private DisplayTextScrollPanel myOutput;
+    private String peerName;
     private boolean over;
 
-    public TCPServer(int portNum, DisplayTextScrollPanel out){
+    public TCPServer(int portNum, DisplayTextScrollPanel out, String peersName){
+    	peerName = peersName;
     	myOutput = out;
     	PORT = portNum;
     	over = false;
@@ -76,7 +78,7 @@ public class TCPServer implements Runnable {
             System.out.println("I received object \"" + c.cast(inObj) + "\" from the client!");
 
             if (inType.equals("java.lang.String")){
-            	myOutput.addText((String) receivedObj);
+            	myOutput.addText(peerName + ":" + (String) receivedObj);
             }
         }
     }

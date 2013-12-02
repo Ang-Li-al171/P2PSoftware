@@ -29,7 +29,12 @@ public class ClientWindow extends JFrame{
 	private HashMap<String, String> listOfPeers;
 	private String myName;
 	
-	public ClientWindow(String name){
+	/**
+	 * 
+	 * @param name name to appear in the p2p system
+	 * @param udpServer IP address of the p2p server
+	 */
+	public ClientWindow(String name, String udpServer){
 		super();
 		this.setTitle("My Fancy-looking P2P Client Program");
 		this.myName = name;
@@ -48,7 +53,7 @@ public class ClientWindow extends JFrame{
         this.pack();
         this.setVisible(true);
 
-		myUDPClient = new PPClient("10.190.252.196", myName);
+		myUDPClient = new PPClient(udpServer, myName);
 	}
 	
 	private void addServerButton(){
