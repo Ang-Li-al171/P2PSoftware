@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class TCPServer implements Runnable {
     private boolean over;
 
     public TCPServer(int portNum){
+    	nameToChatBox = new HashMap<String, DisplayTextScrollPanel>();
     	PORT = portNum;
     	over = false;
     }
