@@ -8,7 +8,7 @@ public class P2PClient {
 	
 	public static void main(String[] args){
 		
-		new ClientWindow("Big Ang Li", "10.190.252.196");
+		new ClientWindow("Ang", "10.181.16.111");
 		
 	}
 }

@@ -1,38 +1,27 @@
 package p2pTCP.server;
 
 import gui.DisplayTextScrollPanel;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
 
 public class TCPServer implements Runnable {
 
     private final int PORT;
-    private static final String DEFAULT_RECEIVED_FILE = System.getProperty("user.dir") +
-                                                        File.separator
-                                                        + "src" + File.separator + "p2pTCP" +
-                                                        File.separator + "server" + File.separator +
-                                                        "ReceivedFile.txt";
     private Object receivedObj = null;
-    private String receivedFile = null;
     private Map<String, DisplayTextScrollPanel> nameToChatBox;
-    private String peerName;
     private boolean over;
 
-    public TCPServer(int portNum){
-    	nameToChatBox = new HashMap<String, DisplayTextScrollPanel>();
-    	PORT = portNum;
-    	over = false;
+    public TCPServer (int portNum) {
+        nameToChatBox = new HashMap<String, DisplayTextScrollPanel>();
+        PORT = portNum;
+        over = false;
     }
-    
+
     @SuppressWarnings("resource")
     public void runServer () {
         try {
@@ -60,70 +49,41 @@ public class TCPServer implements Runnable {
             System.out.println(e.getMessage());
         }
     }
-    
-    public synchronized void addChatWindow(String peerName, DisplayTextScrollPanel out){
-    	nameToChatBox.put(peerName, out);
+
+    public synchronized void addChatWindow (String peerName, DisplayTextScrollPanel out) {
+        nameToChatBox.put(peerName, out);
     }
 
     @SuppressWarnings("rawtypes")
     private void dealWithObjectReceived (String inType, Object inObj) {
-        if (inType.equals("textfile")) {
-            writeReceivedFile(inObj);
-        }
-        else {
-            Class c = null;
-            try {
-                c = Class.forName(inType);
-            }
-            catch (ClassNotFoundException e) {
-                System.out.println("Client's object type is not found...");
-                return;
-            }
-            receivedObj = c.cast(inObj);
-            System.out.println("I received object \"" + c.cast(inObj) + "\" from the client!");
 
-            if (inType.equals("java.lang.String")){
-            	String received = (String) receivedObj;
-            	nameToChatBox.get(received.split(":")[0]).addText(received);
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void writeReceivedFile (Object inObj) {
+        Class c = null;
         try {
-            BufferedWriter out = new BufferedWriter(new FileWriter(DEFAULT_RECEIVED_FILE));
-
-            List<String> fileLines = (List<String>) inObj;
-            for (String s : fileLines) {
-                out.write(s + "\n");
-            }
-
-            out.close();
-            receivedFile = DEFAULT_RECEIVED_FILE;
+            c = Class.forName(inType);
         }
-        catch (Exception e) {
-            System.out.println("Error reading client's file input or writing it to a file...");
+        catch (ClassNotFoundException e) {
+            System.out.println("Client's object type is not found...");
             return;
         }
+        receivedObj = c.cast(inObj);
+        System.out.println("I received object \"" + c.cast(inObj) + "\" from the client!");
 
-        System.out.println("I received file \"" + DEFAULT_RECEIVED_FILE + "\" from the client!");
+        if (inType.equals("java.lang.String")) {
+            String received = (String) receivedObj;
+            nameToChatBox.get(received.split(":")[0]).addText(received);
+        }
     }
 
     public Object getMostRecentObject () {
         return receivedObj;
     }
 
-    public String getMostRecentFileName () {
-        return receivedFile;
-    }
-    
-    public void turnOff(){
-    	over = true;
+    public void turnOff () {
+        over = true;
     }
 
-	@Override
-	public void run() {
-		this.runServer();
-	}
+    @Override
+    public void run () {
+        this.runServer();
+    }
 }

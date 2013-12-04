@@ -1,14 +1,10 @@
 package p2pTCP.client;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class TCPClient {
 
@@ -30,28 +26,8 @@ public class TCPClient {
         }
         catch (Exception e) {
             System.out.println("Something went wrong trying to send the object...");
-            e.printStackTrace();
         }
         
-    }
-    
-    public void sendFileToServer (String filePath) {
-
-        try {
-            Scanner fin = new Scanner(new FileInputStream(filePath));
-            List<String> fileText = new ArrayList<String>();
-            while (fin.hasNext()) {
-                fileText.add(fin.nextLine());
-            }
-            fin.close();
-            
-            createSocketAndSend("textfile", fileText);
-        }
-        catch (Exception e) {
-            System.out.println("Something went wrong trying to send the file...");
-            e.printStackTrace();
-        }
-
     }
 
     private void createSocketAndSend (String outType, Object outObj) throws IOException,
