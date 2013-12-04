@@ -16,13 +16,19 @@ public class TCPServer implements Runnable {
     private Map<String, DisplayTextScrollPanel> nameToChatBox;
     private boolean over;
 
+    /**
+     * 
+     * @param portNum Port number to be used for receiving connections from other people
+     */
     public TCPServer (int portNum) {
         nameToChatBox = new HashMap<String, DisplayTextScrollPanel>();
         PORT = portNum;
         over = false;
     }
-
-    @SuppressWarnings("resource")
+    
+    /**
+     * sets up the server to be ready to receive TCP connections from other peers
+     */
     public void runServer () {
         try {
 
@@ -44,12 +50,19 @@ public class TCPServer implements Runnable {
 
                 clientSocket.close();
             }
+            
+            serverS.close();
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
+    /**
+     * used by the GUI class to associate a new Chat Window with this server
+     * @param peerName name of the peer for this chat window
+     * @param out the scrollable text pane in the GUI
+     */
     public synchronized void addChatWindow (String peerName, DisplayTextScrollPanel out) {
         nameToChatBox.put(peerName, out);
     }
@@ -74,14 +87,24 @@ public class TCPServer implements Runnable {
         }
     }
 
+    /**
+     * not used in this chatting program, but may be used in other cases
+     * @return the object received most recently, already casted
+     */
     public Object getMostRecentObject () {
         return receivedObj;
     }
 
+    /**
+     * shuts down this TCP server
+     */
     public void turnOff () {
         over = true;
     }
 
+    /**
+     * used for running this TCP Server in a separate thread
+     */
     @Override
     public void run () {
         this.runServer();

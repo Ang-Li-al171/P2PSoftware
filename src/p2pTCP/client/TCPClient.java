@@ -13,12 +13,23 @@ public class TCPClient {
     private final int TIMEOUT;
     private Socket s;
 
+    /**
+     * 
+     * @param hostIp IP address of the host one wants to connect to
+     * @param portNum Port number of the host one wants to connect to
+     * @param timeOut Connection timeout value
+     */
     public TCPClient (String hostIp, int portNum, int timeOut) {
         HOSTIP = hostIp;
         PORT = portNum;
         TIMEOUT = timeOut;
     }
 
+    /**
+     * sends a object of specified type to the host specified in the class constructor
+     * @param outType type of object to be cast in at the receiving side, expressed in String
+     * @param outObj the actual object to be sent
+     */
     public void sendObjectToServer (String outType, Object outObj) {
         
         try {

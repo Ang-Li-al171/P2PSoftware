@@ -14,11 +14,18 @@ public class P2PUDPServer {
     private Map<String, String> myPPClientList;
     private boolean over;
 
+    /**
+     * public constructor, initialize instance variables
+     */
     public P2PUDPServer () {
         over = false;
         myPPClientList = new HashMap<String, String>();
     }
     
+    /**
+     * entry point for the java application
+     * @param args
+     */
     public static void main (String[] args) {
         try {
             new P2PUDPServer().launchServer();
@@ -57,7 +64,11 @@ public class P2PUDPServer {
         }
         return list.toString();
     }
-
+    
+    /**
+     * this call sets up the server to be ready to receive messages
+     * @throws IOException
+     */
     public void launchServer () throws IOException {
         
         DatagramSocket serverSocket = new DatagramSocket(UDPSERVER_PORT);
@@ -120,6 +131,9 @@ public class P2PUDPServer {
         serverSocket.close();
     }
 
+    /**
+     * shuts the server down
+     */
     public void turnOff () {
         over = true;
     }

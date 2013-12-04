@@ -67,7 +67,7 @@ public class ClientWindow extends JFrame {
         c.insets = new Insets(8, 8, 8, 8);
         mainPanel.add(connectButton, c);
         
-        disconnectBututon = new JButton("Disconnect From P2P Server");
+        disconnectBututon = new JButton("Disconnect from P2P Server");
         disconnectBututon.addActionListener(new Disconnect());
         GridBagConstraints c2 = new GridBagConstraints();
         c2.gridy = 0;

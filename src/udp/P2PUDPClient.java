@@ -16,6 +16,11 @@ public class P2PUDPClient {
     private String myName;
     private String hostIP;
 
+    /**
+     * 
+     * @param ip IP address of the P2PUDPServer
+     * @param name Nickname for the user as a peer
+     */
     public P2PUDPClient (String ip, String name) {
         hostIP = ip;
         myName = name;
@@ -29,6 +34,10 @@ public class P2PUDPClient {
         }
     }
 
+    /**
+     * connects to the P2PUDPServer and obtains a list of peers
+     * @return map that maps peer name to IP-PortNumber
+     */
     public Map<String, String> connectAndGetPeerList () {
         try {
             createSocketAndSend("Connection Request From : " + myName, CONNECT);
@@ -39,6 +48,9 @@ public class P2PUDPClient {
         return myPeerList;
     }
     
+    /**
+     * disconnects from the P2PUDPServer, erases peer from the server's list
+     */
     public void disconnect(){
         try {
             createSocketAndSend("Disconnection Request From : " + myName, DISCONNECT);
