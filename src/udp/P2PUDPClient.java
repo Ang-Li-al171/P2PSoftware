@@ -27,6 +27,7 @@ public class P2PUDPClient {
     }
 
     private void unpackList (String list) {
+        myPeerList = new HashMap<String, String>();
         list = list.substring(0, list.length() - 1);
         String[] strs = list.split(";");
         for (String s : strs) {

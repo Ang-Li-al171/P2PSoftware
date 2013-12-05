@@ -13,7 +13,7 @@ public class P2PClient {
 	
 	public static void main(String[] args){
 		
-		new ClientWindow("Ang", "10.181.16.111");
+		new ClientWindow("Ang", "10.181.17.185");
 		
 	}
 }
